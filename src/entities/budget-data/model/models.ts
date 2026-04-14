@@ -40,3 +40,9 @@ export interface MonthlyComment {
   markdown: string;
 }
 
+export interface MonthSummary {
+  month: MonthId;
+  totalIncome: number;
+  totalExpense: number;
+  net: number;
+}

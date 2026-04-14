@@ -3,5 +3,7 @@ export const formatCurrency = (value: number) => {
     style: 'currency',
     currency: 'RUB',
     maximumFractionDigits: 0,
-  }).format(value);
+  })
+    .format(value)
+    .replace(/\u00A0/g, ' ');
 };

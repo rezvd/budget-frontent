@@ -5,6 +5,12 @@ type WarningsPageProps = {
 };
 
 export const WarningsPage = ({ warnings }: WarningsPageProps) => {
+  const getSheetLabel = (sheet: DataIngestionWarning['sheet']) => {
+    if (sheet === 'logs') return 'Логи';
+    if (sheet === 'month_plans') return 'Планы по месяцам';
+    return 'Комментарии по месяцам';
+  };
+
   return (
     <main className="page-content">
       <section className="panel">
@@ -16,7 +22,7 @@ export const WarningsPage = ({ warnings }: WarningsPageProps) => {
             {warnings.map((warning, index) => (
               <li key={`${warning.sheet}-${warning.row}-${index}`} className="row">
                 <div>
-                  <strong>{warning.sheet}</strong>
+                  <strong>{getSheetLabel(warning.sheet)}</strong>
                   <p>Строка: {warning.row}</p>
                 </div>
                 <b>{warning.message}</b>

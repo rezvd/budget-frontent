@@ -6,7 +6,7 @@ Legend: `⬜ not started` `🟨 in progress` `✅ done`
    Parse Google Sheets (`logs`, `month_plans`, `month_comments`) into typed models.
 2. ✅ F02: Month navigation  
    Keep selected month as a single source of truth.
-3. ⬜ F03: Month summary  
+3. ✅ F03: Month summary  
    Show income, expenses, net.
 4. ⬜ F04: Expense bar charts (regular vs non-regular)  
 5. ⬜ F05: Income category bar chart  
