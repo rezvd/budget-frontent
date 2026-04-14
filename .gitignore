@@ -34,3 +34,4 @@ dev-dist
 
 # Ignore config file
 .env
+**/data_example.xlsx

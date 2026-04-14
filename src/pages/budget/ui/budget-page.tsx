@@ -1,18 +1,18 @@
 import { useMemo, useState } from 'react';
 
 import {
-  appendTransactionToSheet,
   hasGoogleSheetsConfig,
+  loadPreviewRows,
   loadTransactionsFromSheet,
+  SheetPreviewRow,
 } from '@/entities/transaction/api/google-sheets';
-import { readLocalTransactions, writeLocalTransactions } from '@/entities/transaction/model/storage';
 import { BudgetTransaction } from '@/entities/transaction/model/types';
-import { CreateTransactionForm } from '@/features/transaction/create/ui/create-transaction-form';
 import { BudgetOverview } from '@/widgets/budget-overview/ui/budget-overview';
 import { TransactionsList } from '@/widgets/transactions-list/ui/transactions-list';
 
 export const BudgetPage = () => {
-  const [transactions, setTransactions] = useState<BudgetTransaction[]>(() => readLocalTransactions());
+  const [transactions, setTransactions] = useState<BudgetTransaction[]>([]);
+  const [previewRows, setPreviewRows] = useState<SheetPreviewRow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -29,7 +29,7 @@ export const BudgetPage = () => {
 
   const syncFromSheet = async () => {
     if (!hasGoogleSheetsConfig()) {
-      setMessage('Не заполнены переменные Google Sheets. Используются только локальные данные браузера.');
+      setMessage('Не заполнены переменные Google Sheets (.env).');
       return;
     }
 
@@ -37,10 +37,10 @@ export const BudgetPage = () => {
     setMessage('');
 
     try {
-      const fromSheet = await loadTransactionsFromSheet();
+      const [fromSheet, preview] = await Promise.all([loadTransactionsFromSheet(), loadPreviewRows(5)]);
       setTransactions(fromSheet);
-      writeLocalTransactions(fromSheet);
-      setMessage('Данные загружены из Google Sheets.');
+      setPreviewRows(preview);
+      setMessage(`Данные загружены: ${fromSheet.length} строк.`);
     } catch (error) {
       const text = error instanceof Error ? error.message : 'Не удалось загрузить данные из таблицы.';
       setMessage(text);
@@ -49,32 +49,17 @@ export const BudgetPage = () => {
     }
   };
 
-  const handleCreate = async (transaction: BudgetTransaction) => {
-    const next = [transaction, ...transactions];
-    setTransactions(next);
-    writeLocalTransactions(next);
-    setMessage('Операция сохранена локально.');
-
-    if (!hasGoogleSheetsConfig()) {
-      return;
-    }
-
-    try {
-      await appendTransactionToSheet(transaction);
-      setMessage('Операция записана в Google Sheets.');
-    } catch (error) {
-      const text = error instanceof Error ? error.message : 'Не удалось записать операцию в таблицу.';
-      setMessage(text);
-    }
-  };
-
   return (
     <main className="page">
       <BudgetOverview {...totals} isLoading={isLoading} onSync={syncFromSheet} />
 
       <section className="panel">
-        <h2>Добавить операцию</h2>
-        <CreateTransactionForm onCreate={handleCreate} />
+        <h2>Первые 5 записей из Google Sheets (проверка)</h2>
+        {previewRows.length === 0 ? (
+          <p className="empty">Нажми «Синхронизировать из Google Sheets».</p>
+        ) : (
+          <pre style={{ overflowX: 'auto', fontSize: 13, marginTop: 12 }}>{JSON.stringify(previewRows, null, 2)}</pre>
+        )}
         {message && <p className="message">{message}</p>}
       </section>
 
