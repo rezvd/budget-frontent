@@ -5,6 +5,7 @@ import {
   DataIngestionWarning,
   ingestBudgetDataFromGoogleSheets,
 } from '@/entities/budget-data/api/ingest-budget-data';
+import { buildExpenseChartsData } from '@/entities/budget-data/model/expense-charts';
 import { MonthId, MonthSummary, Transaction } from '@/entities/budget-data/model/models';
 
 const getLatestMonth = (months: MonthId[]) => {
@@ -54,6 +55,16 @@ export const useBudgetSync = () => {
     };
   }, [selectedMonth, transactions]);
 
+  const selectedMonthTransactions = useMemo(() => {
+    if (!selectedMonth) {
+      return [];
+    }
+
+    return transactions.filter((item) => item.month === selectedMonth);
+  }, [selectedMonth, transactions]);
+
+  const expenseCharts = useMemo(() => buildExpenseChartsData(selectedMonthTransactions), [selectedMonthTransactions]);
+
   const syncFromSheet = async () => {
     if (!import.meta.env.VITE_GOOGLE_SHEET_ID || !import.meta.env.VITE_GOOGLE_SHEETS_API_KEY) {
       setMessage('Не заполнены переменные Google Sheets (.env).');
@@ -90,6 +101,7 @@ export const useBudgetSync = () => {
     isLoading,
     message,
     monthSummary,
+    expenseCharts,
     syncFromSheet,
   };
 };

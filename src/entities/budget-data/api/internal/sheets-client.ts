@@ -17,7 +17,7 @@ const buildBatchGetUrl = () => {
     majorDimension: 'ROWS',
     valueRenderOption: 'UNFORMATTED_VALUE',
   });
-  params.append('ranges', 'logs!A:H');
+  params.append('ranges', 'logs!A:M');
   params.append('ranges', 'month_plans!A:C');
   params.append('ranges', 'month_comments!A:B');
 

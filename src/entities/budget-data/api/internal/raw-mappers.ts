@@ -10,7 +10,7 @@ export const toRawLogRow = (row: RawCell[]): RawLogRow => ({
   category: normalizeText(row[4]) || null,
   comment: normalizeText(row[5]) || null,
   additional_comment: normalizeText(row[6]) || null,
-  is_regular_type: normalizeText(row[7]) || null,
+  is_regular_type: normalizeText(row[12]) || null,
 });
 
 export const toRawMonthPlanRow = (row: RawCell[]): RawMonthPlanRow => ({

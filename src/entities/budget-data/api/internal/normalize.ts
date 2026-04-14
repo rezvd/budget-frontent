@@ -57,11 +57,17 @@ export const toRegularity = (value: string): ExpenseRegularity => {
   if (!normalized) {
     return ExpenseRegularity.UNKNOWN;
   }
-  if (normalized.includes('регуляр')) {
-    return ExpenseRegularity.REGULAR;
-  }
-  if (normalized.includes('круп') || normalized.includes('нерегуляр') || normalized.includes('non')) {
+  if (
+    normalized.includes('нерегуляр') ||
+    normalized.includes('круп') ||
+    normalized.includes('non_regular') ||
+    normalized.startsWith('non') ||
+    normalized.includes('non-regular')
+  ) {
     return ExpenseRegularity.NON_REGULAR;
+  }
+  if (normalized.includes('регуляр') || normalized === 'regular' || normalized.includes('regular')) {
+    return ExpenseRegularity.REGULAR;
   }
   return ExpenseRegularity.UNKNOWN;
 };

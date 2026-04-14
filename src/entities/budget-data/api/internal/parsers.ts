@@ -40,8 +40,8 @@ export const parseLogs = (rows: RawCell[][], warnings: DataIngestionWarning[]): 
       return;
     }
 
-    if (signedAmount == null || signedAmount === 0) {
-      warnings.push({ sheet: 'logs', row: rowNumber, message: 'Skipped row with invalid or zero amount.' });
+    if (signedAmount == null) {
+      warnings.push({ sheet: 'logs', row: rowNumber, message: 'Skipped row with invalid amount.' });
       return;
     }
 

@@ -46,3 +46,9 @@ export interface MonthSummary {
   totalExpense: number;
   net: number;
 }
+
+export interface CategoryBarItem {
+  category: string;
+  amount: number;
+  percentOfMonthTotal: number;
+}

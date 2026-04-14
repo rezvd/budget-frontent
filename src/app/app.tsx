@@ -9,8 +9,17 @@ type AppPage = 'dashboard' | 'warnings';
 
 export const App = () => {
   const [activePage, setActivePage] = useState<AppPage>('dashboard');
-  const { availableMonths, selectedMonth, setSelectedMonth, warnings, isLoading, message, monthSummary, syncFromSheet } =
-    useBudgetSync();
+  const {
+    availableMonths,
+    selectedMonth,
+    setSelectedMonth,
+    warnings,
+    isLoading,
+    message,
+    monthSummary,
+    expenseCharts,
+    syncFromSheet,
+  } = useBudgetSync();
 
   return (
     <div className="app-shell">
@@ -29,6 +38,7 @@ export const App = () => {
           availableMonths={availableMonths}
           selectedMonth={selectedMonth}
           summary={monthSummary}
+          expenseCharts={expenseCharts}
           onSelectMonth={setSelectedMonth}
         />
       ) : (
