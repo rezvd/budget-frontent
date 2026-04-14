@@ -1,0 +1,8 @@
+{
+  "singleQuote": true,
+  "tailwindFunctions": [
+    "cva",
+    "cn"
+  ],
+  "printWidth": 90
+}
