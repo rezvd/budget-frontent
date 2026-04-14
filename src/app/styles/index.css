@@ -19,58 +19,6 @@ p {
   margin: 0;
 }
 
-.page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 24px;
-  display: grid;
-  gap: 16px;
-}
-
-.header-card,
-.panel {
-  background: #ffffff;
-  border: 1px solid #d0d5dd;
-  border-radius: 16px;
-  padding: 16px;
-}
-
-.header-card {
-  display: grid;
-  gap: 12px;
-}
-
-.totals {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.totals div {
-  background: #f2f4f7;
-  border-radius: 12px;
-  padding: 10px;
-  display: grid;
-  gap: 4px;
-}
-
-.totals span {
-  color: #475467;
-  font-size: 12px;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-label {
-  display: grid;
-  gap: 6px;
-  font-size: 14px;
-}
-
 input,
 select,
 button {
@@ -91,13 +39,50 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.full-width {
-  grid-column: 1 / -1;
+.panel {
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.app-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 16px;
+}
+
+.sidebar {
+  align-self: start;
+  position: sticky;
+  top: 24px;
+  display: grid;
+  gap: 12px;
+}
+
+.sidebar-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.sidebar-divider {
+  border: none;
+  border-top: 1px solid #eaecf0;
+  width: 100%;
+  margin: 4px 0;
+}
+
+.page-content {
+  display: grid;
+  gap: 16px;
 }
 
 .list {
   list-style: none;
-  margin: 0;
+  margin: 12px 0 0;
   padding: 0;
   display: grid;
   gap: 10px;
@@ -118,18 +103,6 @@ button:disabled {
   font-size: 12px;
 }
 
-.row small {
-  color: #475467;
-}
-
-.income {
-  color: #067647;
-}
-
-.expense {
-  color: #b42318;
-}
-
 .message {
   margin-top: 8px;
   color: #344054;
@@ -140,13 +113,13 @@ button:disabled {
   color: #667085;
 }
 
-@media (max-width: 768px) {
-  .page {
+@media (max-width: 920px) {
+  .app-shell {
     padding: 12px;
+    grid-template-columns: 1fr;
   }
 
-  .totals,
-  .form-grid {
-    grid-template-columns: 1fr;
+  .sidebar {
+    position: static;
   }
 }

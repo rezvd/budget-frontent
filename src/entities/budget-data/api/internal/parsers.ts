@@ -1,14 +1,6 @@
 import { MonthlyBudgetPlan, MonthlyComment, Transaction } from '../../model/models';
 import { DataIngestionWarning, RawCell } from './types';
-import {
-  createDate,
-  isTechnicalCategory,
-  normalizeSpaces,
-  parseSignedAmount,
-  toDay,
-  toMonthId,
-  toRegularity,
-} from './normalize';
+import { createDate, isTechnicalCategory, normalizeSpaces, parseSignedAmount, toDay, toMonthId, toRegularity } from './normalize';
 import { toRawLogRow, toRawMonthCommentRow, toRawMonthPlanRow } from './raw-mappers';
 
 export const parseLogs = (rows: RawCell[][], warnings: DataIngestionWarning[]): Transaction[] => {
@@ -19,12 +11,18 @@ export const parseLogs = (rows: RawCell[][], warnings: DataIngestionWarning[]): 
     const raw = toRawLogRow(row);
 
     const month = toMonthId(raw.month);
+    const rawMonthIsEmpty = raw.month === 0 || String(raw.month ?? '').trim() === '';
     const category = normalizeSpaces(raw.category ?? '');
+    const rawAmountText = String(raw.amount ?? '').trim();
     const signedAmount = parseSignedAmount(raw.amount);
     const day = toDay(raw.day);
 
     const isEmpty = !month && !category && signedAmount == null;
     if (isEmpty) {
+      return;
+    }
+
+    if (rawMonthIsEmpty || rawAmountText === '') {
       return;
     }
 
