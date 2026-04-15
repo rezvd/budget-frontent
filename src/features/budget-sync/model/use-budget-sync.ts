@@ -46,6 +46,18 @@ export const useBudgetSync = () => {
     return transactions.filter((item) => item.month === selectedMonth);
   }, [selectedMonth, transactions]);
 
+  const allLogs = useMemo(
+    () =>
+      [...transactions].sort((a, b) => {
+        if (a.date !== b.date) {
+          return b.date.localeCompare(a.date);
+        }
+
+        return b.id.localeCompare(a.id);
+      }),
+    [transactions],
+  );
+
   const selectedMonthComment = useMemo(() => {
     if (!selectedMonth) {
       return null;
@@ -102,6 +114,7 @@ export const useBudgetSync = () => {
     expenseCharts,
     incomeCategoryBars,
     budgetVsActualRows,
+    allLogs,
     syncFromSheet,
   };
 };

@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useBudgetSync } from '@/features/budget-sync/model/use-budget-sync';
 import { BudgetPage } from '@/pages/budget/ui/budget-page';
+import { LogsPage } from '@/pages/logs/ui/logs-page';
 import { SyncPage } from '@/pages/sync/ui/sync-page';
 import { AppSidebar } from '@/widgets/app-sidebar/ui/app-sidebar';
 
-type AppPage = 'dashboard' | 'sync';
+type AppPage = 'dashboard' | 'logs' | 'sync';
 
 export const App = () => {
   const [activePage, setActivePage] = useState<AppPage>('dashboard');
@@ -21,6 +22,7 @@ export const App = () => {
     expenseCharts,
     incomeCategoryBars,
     budgetVsActualRows,
+    allLogs,
     syncFromSheet,
   } = useBudgetSync();
 
@@ -50,6 +52,8 @@ export const App = () => {
           monthlyComment={selectedMonthComment}
           onSelectMonth={setSelectedMonth}
         />
+      ) : activePage === 'logs' ? (
+        <LogsPage rows={allLogs} />
       ) : (
         <SyncPage
           onSync={syncFromSheet}

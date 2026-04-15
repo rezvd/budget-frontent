@@ -433,6 +433,65 @@ button:disabled {
   flex: 0 0 auto;
 }
 
+.logs-table {
+  min-width: 980px;
+}
+
+.logs-table th:nth-child(1),
+.logs-table td:nth-child(1) {
+  width: 100px;
+}
+
+.logs-table th:nth-child(2),
+.logs-table td:nth-child(2) {
+  width: 110px;
+}
+
+.logs-table th:nth-child(3),
+.logs-table td:nth-child(3) {
+  width: 220px;
+}
+
+.logs-table th:nth-child(4),
+.logs-table td:nth-child(4),
+.logs-table th:nth-child(5),
+.logs-table td:nth-child(5),
+.logs-table th:nth-child(6),
+.logs-table td:nth-child(6) {
+  width: 220px;
+}
+
+.logs-amount-income {
+  color: #15803d;
+  font-weight: 600;
+}
+
+.logs-amount-expense {
+  color: #b42318;
+  font-weight: 600;
+}
+
+.logs-empty {
+  margin-top: 10px;
+}
+
+.logs-groups {
+  margin-top: 12px;
+  display: grid;
+  gap: 18px;
+}
+
+.logs-month-group {
+  display: grid;
+  gap: 8px;
+}
+
+.logs-month-title {
+  margin: 0;
+  font-size: 16px;
+  color: #1d2939;
+}
+
 .month-nav {
   width: 100%;
   display: grid;

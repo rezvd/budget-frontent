@@ -1,4 +1,4 @@
-type AppPage = 'dashboard' | 'sync';
+type AppPage = 'dashboard' | 'logs' | 'sync';
 
 type AppSidebarProps = {
   activePage: AppPage;
@@ -16,6 +16,14 @@ export const AppSidebar = ({ activePage, onNavigate }: AppSidebarProps) => {
           aria-current={activePage === 'dashboard' ? 'page' : undefined}
         >
           Дашборд
+        </button>
+        <button
+          type="button"
+          className={`top-menu-link ${activePage === 'logs' ? 'is-active' : ''}`}
+          onClick={() => onNavigate('logs')}
+          aria-current={activePage === 'logs' ? 'page' : undefined}
+        >
+          Логи
         </button>
         <button
           type="button"

@@ -17,7 +17,7 @@ Legend: `⬜ not started` `🟨 in progress` `✅ done`
    Compare monthly plan and factual spending by category.
 8. ✅ F07: Monthly comment in Markdown  
    Render monthly comment as Markdown (read-only).
-9. ⬜ F08: Right sidebar navigation  
+9. ✅ F08: Right sidebar navigation  
    Switch between Dashboard and Logs pages.
-10. ⬜ F09: Logs page (newest first)  
+10. ✅ F09: Logs page (newest first)  
    Dedicated page with transactions from new to old.
