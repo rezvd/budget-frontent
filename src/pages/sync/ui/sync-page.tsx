@@ -1,10 +1,14 @@
 import { DataIngestionWarning } from '@/entities/budget-data/api/ingest-budget-data';
 
-type WarningsPageProps = {
+type SyncPageProps = {
+  onSync: () => void;
+  isLoading: boolean;
+  message: string;
+  monthsCount: number;
   warnings: DataIngestionWarning[];
 };
 
-export const WarningsPage = ({ warnings }: WarningsPageProps) => {
+export const SyncPage = ({ onSync, isLoading, message, monthsCount, warnings }: SyncPageProps) => {
   const getSheetLabel = (sheet: DataIngestionWarning['sheet']) => {
     if (sheet === 'logs') return 'Логи';
     if (sheet === 'month_plans') return 'Планы по месяцам';
@@ -13,6 +17,15 @@ export const WarningsPage = ({ warnings }: WarningsPageProps) => {
 
   return (
     <main className="page-content">
+      <section className="panel">
+        <h2>Синхронизация</h2>
+        <button type="button" className="sync-primary-button" onClick={onSync} disabled={isLoading}>
+          {isLoading ? 'Загрузка...' : 'Синхронизировать из Google Sheets'}
+        </button>
+        <p className="message">Доступно месяцев: {monthsCount}.</p>
+        {message && <p className="message">{message}</p>}
+      </section>
+
       <section className="panel">
         <h2>Предупреждения парсинга</h2>
         {warnings.length === 0 ? (

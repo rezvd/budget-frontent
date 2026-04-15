@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useBudgetSync } from '@/features/budget-sync/model/use-budget-sync';
 import { BudgetPage } from '@/pages/budget/ui/budget-page';
-import { WarningsPage } from '@/pages/warnings/ui/warnings-page';
+import { SyncPage } from '@/pages/sync/ui/sync-page';
 import { AppSidebar } from '@/widgets/app-sidebar/ui/app-sidebar';
 
-type AppPage = 'dashboard' | 'warnings';
+type AppPage = 'dashboard' | 'sync';
 
 export const App = () => {
   const [activePage, setActivePage] = useState<AppPage>('dashboard');
+  const hasAutoSyncedRef = useRef(false);
   const {
     availableMonths,
     selectedMonth,
@@ -22,16 +23,20 @@ export const App = () => {
     syncFromSheet,
   } = useBudgetSync();
 
+  useEffect(() => {
+    if (hasAutoSyncedRef.current) {
+      return;
+    }
+
+    hasAutoSyncedRef.current = true;
+    void syncFromSheet();
+  }, [syncFromSheet]);
+
   return (
     <div className="app-shell">
       <AppSidebar
         activePage={activePage}
         onNavigate={setActivePage}
-        onSync={syncFromSheet}
-        isLoading={isLoading}
-        message={message}
-        monthsCount={availableMonths.length}
-        warnings={warnings}
       />
 
       {activePage === 'dashboard' ? (
@@ -44,7 +49,13 @@ export const App = () => {
           onSelectMonth={setSelectedMonth}
         />
       ) : (
-        <WarningsPage warnings={warnings} />
+        <SyncPage
+          onSync={syncFromSheet}
+          isLoading={isLoading}
+          message={message}
+          monthsCount={availableMonths.length}
+          warnings={warnings}
+        />
       )}
     </div>
   );

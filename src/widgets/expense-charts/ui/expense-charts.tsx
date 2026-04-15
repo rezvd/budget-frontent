@@ -37,7 +37,7 @@ const Bars = ({
         <div className="hbars-grid">
           {items.map((item) => {
             const width = max > 0 ? (item.amount / max) * 100 : 0;
-            const tooltip = `${item.category} · ${formatCurrency(item.amount)} · ${item.percentOfMonthTotal.toFixed(1)}%`;
+            const tooltip = `${item.category} · ${formatCurrency(item.amount)} · ${Math.round(item.percentOfMonthTotal)}%`;
 
             return (
               <div
@@ -49,7 +49,7 @@ const Bars = ({
                 <div className="hbar-label">{item.category}</div>
                 <div className="hbar-track">
                   <div className="hbar" style={{ width: `${Math.max(width, 3)}%`, background: colors[item.category] }} />
-                  <span className="hbar-percent">{item.percentOfMonthTotal.toFixed(1)}%</span>
+                  <span className="hbar-percent">{Math.round(item.percentOfMonthTotal)}%</span>
                 </div>
                 <div className="hbar-value">{formatCurrency(item.amount)}</div>
               </div>
@@ -83,67 +83,71 @@ export const ExpenseCharts = ({ regular, nonRegular, income, excludedLoans, brea
     setSelectedCategories((prev) => (prev.includes(category) ? prev.filter((item) => item !== category) : [...prev, category]));
   };
 
+  const hasDetails = details.length > 0;
+
   return (
     <>
-      <section className="panel">
-        <div className="panel-header-row">
-          <h2>Расходы и доходы</h2>
-          {selectedCategories.length > 0 && (
-            <button type="button" className="text-reset-button" onClick={() => setSelectedCategories([])}>
-              Сбросить
-            </button>
-          )}
-        </div>
-        <div className="charts-layout">
-          <Bars
-            title="Повседневные расходы"
-            items={regular}
-            colors={categoryColors}
-            selectedCategories={selectedCategorySet}
-            onToggleCategory={toggleCategory}
-          />
-          <div className="charts-right-col">
+      <div className={hasDetails ? 'charts-with-details' : ''}>
+        <section className="panel">
+          <div className="panel-header-row">
+            <h2>Расходы и доходы</h2>
+            {selectedCategories.length > 0 && (
+              <button type="button" className="text-reset-button" onClick={() => setSelectedCategories([])}>
+                Сбросить
+              </button>
+            )}
+          </div>
+          <div className={`charts-layout ${hasDetails ? 'charts-layout-stacked' : ''}`}>
             <Bars
-              title="Крупные расходы"
-              items={nonRegular}
+              title="Повседневные расходы"
+              items={regular}
               colors={categoryColors}
               selectedCategories={selectedCategorySet}
               onToggleCategory={toggleCategory}
             />
-            <div className="income-section">
+            <div className="charts-right-col">
               <Bars
-                title="Доходы"
-                items={income}
+                title="Крупные расходы"
+                items={nonRegular}
                 colors={categoryColors}
                 selectedCategories={selectedCategorySet}
                 onToggleCategory={toggleCategory}
               />
+              <div className="income-section">
+                <Bars
+                  title="Доходы"
+                  items={income}
+                  colors={categoryColors}
+                  selectedCategories={selectedCategorySet}
+                  onToggleCategory={toggleCategory}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {details.length > 0 && (
-        <section className="panel">
-          <h2>Детали категорий</h2>
-          <div className="details-grid">
-            {details.map((entry) => (
-              <section key={entry.category} className="details-card">
-                <h3>{entry.category}</h3>
-                <ul className="details-list">
-                  {entry.items.map((item) => (
-                    <li key={`${entry.category}-${item.label}`} className="details-row">
-                      <span className="details-label">{item.label}</span>
-                      <span className="details-meta">{item.percentOfCategoryTotal.toFixed(1)}%</span>
-                      <b className="details-amount">{formatCurrency(item.amount)}</b>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ))}
-          </div>
         </section>
-      )}
+
+        {hasDetails && (
+          <section className="panel">
+            <h2>Детали категорий</h2>
+            <div className="details-grid">
+              {details.map((entry) => (
+                <section key={entry.category} className="details-card">
+                  <h3>{entry.category}</h3>
+                  <ul className="details-list">
+                    {entry.items.map((item) => (
+                      <li key={`${entry.category}-${item.label}`} className="details-row">
+                        <span className="details-label">{item.label}</span>
+                        <span className="details-meta">{Math.round(item.percentOfCategoryTotal)}%</span>
+                        <b className="details-amount">{formatCurrency(item.amount)}</b>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
 
       {excludedLoans.length > 0 && (
         <section className="panel">
