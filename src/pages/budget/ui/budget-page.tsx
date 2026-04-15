@@ -3,10 +3,12 @@ import { ExpenseChartsData } from '@/entities/budget-data/model/expense-charts';
 import { MonthNavigation } from '@/widgets/month-navigation/ui/month-navigation';
 import { BudgetVsActualTable } from '@/widgets/budget-vs-actual-table/ui/budget-vs-actual-table';
 import { ExpenseCharts } from '@/widgets/expense-charts/ui/expense-charts';
+import { MonthComment } from '@/widgets/month-comment/ui/month-comment';
 
 type BudgetPageProps = {
   availableMonths: MonthId[];
   selectedMonth: MonthId | null;
+  monthlyComment: string | null;
   expenseCharts: ExpenseChartsData;
   incomeCategoryBars: CategoryBarItem[];
   budgetVsActualRows: BudgetVsActualRow[];
@@ -16,6 +18,7 @@ type BudgetPageProps = {
 export const BudgetPage = ({
   availableMonths,
   selectedMonth,
+  monthlyComment,
   expenseCharts,
   incomeCategoryBars,
   budgetVsActualRows,
@@ -31,7 +34,10 @@ export const BudgetPage = ({
         breakdownByCategory={expenseCharts.breakdownByCategory}
         excludedLoans={expenseCharts.excludedLoans}
       />
-      <BudgetVsActualTable rows={budgetVsActualRows} />
+      <div className="budget-comment-layout">
+        <BudgetVsActualTable rows={budgetVsActualRows} />
+        <MonthComment markdown={monthlyComment} />
+      </div>
     </main>
   );
 };

@@ -16,6 +16,15 @@ export type ExpenseChartsData = {
 const LOANS_CATEGORY = '.одолжения';
 
 const isLoansCategory = (category: string) => category.trim().toLowerCase() === LOANS_CATEGORY;
+const sanitizeLabelText = (value: string) => {
+  const normalized = value.replace(/\s+/g, ' ').trim();
+
+  if (!normalized || /^false$/i.test(normalized)) {
+    return '';
+  }
+
+  return normalized;
+};
 
 const toCategoryBars = (transactions: Transaction[]): CategoryBarItem[] => {
   const grouped = new Map<string, number>();
@@ -37,10 +46,25 @@ const toCategoryBars = (transactions: Transaction[]): CategoryBarItem[] => {
 };
 
 const normalizeBreakdownLabel = (transaction: Transaction) => {
-  const value = transaction.comment || transaction.shop || transaction.additionalComment || '';
-  const normalized = value.replace(/\s+/g, ' ').trim();
+  const comment = sanitizeLabelText(transaction.comment ?? '');
+  const additionalComment = sanitizeLabelText(transaction.additionalComment ?? '');
+  const shop = sanitizeLabelText(transaction.shop ?? '');
 
-  return normalized || 'Прочее';
+  const base = comment || additionalComment;
+
+  if (base && shop && base.toLowerCase() !== shop.toLowerCase()) {
+    return `${base} (${shop})`;
+  }
+
+  if (base) {
+    return base;
+  }
+
+  if (shop) {
+    return shop;
+  }
+
+  return '—';
 };
 
 const buildBreakdownByCategory = (transactions: Transaction[]) => {

@@ -15,7 +15,7 @@ Legend: `⬜ not started` `🟨 in progress` `✅ done`
    Show category spend breakdown on hover, sorted descending.
 7. ✅ F06: Budget vs actual table  
    Compare monthly plan and factual spending by category.
-8. ⬜ F07: Monthly comment in Markdown  
+8. ✅ F07: Monthly comment in Markdown  
    Render monthly comment as Markdown (read-only).
 9. ⬜ F08: Right sidebar navigation  
    Switch between Dashboard and Logs pages.

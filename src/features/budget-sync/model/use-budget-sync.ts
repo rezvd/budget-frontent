@@ -8,7 +8,7 @@ import {
 import { buildExpenseChartsData } from '@/entities/budget-data/model/expense-charts';
 import { buildBudgetVsActualRows } from '@/entities/budget-data/model/budget-vs-actual';
 import { buildIncomeCategoryBars } from '@/entities/budget-data/model/income-chart';
-import { MonthId, MonthlyBudgetPlan, Transaction } from '@/entities/budget-data/model/models';
+import { MonthId, MonthlyBudgetPlan, MonthlyComment, Transaction } from '@/entities/budget-data/model/models';
 
 const getLatestMonth = (months: MonthId[]) => {
   if (months.length === 0) {
@@ -31,6 +31,7 @@ const getAvailableMonths = (data: BudgetDataIngestionResult): MonthId[] => {
 export const useBudgetSync = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [monthlyPlans, setMonthlyPlans] = useState<MonthlyBudgetPlan[]>([]);
+  const [monthlyComments, setMonthlyComments] = useState<MonthlyComment[]>([]);
   const [availableMonths, setAvailableMonths] = useState<MonthId[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<MonthId | null>(null);
   const [warnings, setWarnings] = useState<DataIngestionWarning[]>([]);
@@ -44,6 +45,14 @@ export const useBudgetSync = () => {
 
     return transactions.filter((item) => item.month === selectedMonth);
   }, [selectedMonth, transactions]);
+
+  const selectedMonthComment = useMemo(() => {
+    if (!selectedMonth) {
+      return null;
+    }
+
+    return monthlyComments.find((item) => item.month === selectedMonth)?.markdown ?? null;
+  }, [monthlyComments, selectedMonth]);
 
   const expenseCharts = useMemo(() => buildExpenseChartsData(selectedMonthTransactions), [selectedMonthTransactions]);
   const incomeCategoryBars = useMemo(() => buildIncomeCategoryBars(selectedMonthTransactions), [selectedMonthTransactions]);
@@ -68,6 +77,7 @@ export const useBudgetSync = () => {
 
       setTransactions(data.transactions);
       setMonthlyPlans(data.monthlyPlans);
+      setMonthlyComments(data.monthlyComments);
       setAvailableMonths(months);
       setSelectedMonth(latestMonth);
       setWarnings(data.warnings);
@@ -88,6 +98,7 @@ export const useBudgetSync = () => {
     warnings,
     isLoading,
     message,
+    selectedMonthComment,
     expenseCharts,
     incomeCategoryBars,
     budgetVsActualRows,

@@ -3,6 +3,18 @@ import { DataIngestionWarning, RawCell } from './types';
 import { createDate, isTechnicalCategory, normalizeSpaces, parseSignedAmount, toDay, toMonthId, toRegularity } from './normalize';
 import { toRawLogRow, toRawMonthCommentRow, toRawMonthPlanRow } from './raw-mappers';
 
+const sanitizeOptionalText = (value: string) => {
+  if (!value) {
+    return '';
+  }
+
+  if (/^false$/i.test(value)) {
+    return '';
+  }
+
+  return value;
+};
+
 export const parseLogs = (rows: RawCell[][], warnings: DataIngestionWarning[]): Transaction[] => {
   const out: Transaction[] = [];
 
@@ -50,9 +62,9 @@ export const parseLogs = (rows: RawCell[][], warnings: DataIngestionWarning[]): 
       return;
     }
 
-    const shop = normalizeSpaces(raw.shop ?? '');
-    const comment = normalizeSpaces(raw.comment ?? '');
-    const additionalComment = normalizeSpaces(raw.additional_comment ?? '');
+    const shop = sanitizeOptionalText(normalizeSpaces(raw.shop ?? ''));
+    const comment = sanitizeOptionalText(normalizeSpaces(raw.comment ?? ''));
+    const additionalComment = sanitizeOptionalText(normalizeSpaces(raw.additional_comment ?? ''));
 
     out.push({
       id: `logs-${month}-${String(day).padStart(2, '0')}-${rowNumber}`,
@@ -111,14 +123,19 @@ export const parseMonthComments = (rows: RawCell[][], warnings: DataIngestionWar
     const rowNumber = index + 2;
     const raw = toRawMonthCommentRow(row);
     const month = toMonthId(raw.month);
-    const markdown = raw.comment.trim();
+    const markdown = String(raw.comment ?? '').trim();
+    const hasComment = markdown !== '' && !/^false$/i.test(markdown);
 
-    if (!month && !markdown) {
+    if (!month && !hasComment) {
       return;
     }
 
-    if (!month || !markdown) {
+    if (!month) {
       warnings.push({ sheet: 'month_comments', row: rowNumber, message: 'Skipped invalid month comment row.' });
+      return;
+    }
+
+    if (!hasComment) {
       return;
     }
 

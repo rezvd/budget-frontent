@@ -17,6 +17,7 @@ export const App = () => {
     warnings,
     isLoading,
     message,
+    selectedMonthComment,
     expenseCharts,
     incomeCategoryBars,
     budgetVsActualRows,
@@ -46,6 +47,7 @@ export const App = () => {
           expenseCharts={expenseCharts}
           incomeCategoryBars={incomeCategoryBars}
           budgetVsActualRows={budgetVsActualRows}
+          monthlyComment={selectedMonthComment}
           onSelectMonth={setSelectedMonth}
         />
       ) : (
