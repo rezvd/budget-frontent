@@ -296,7 +296,7 @@ button:disabled {
 }
 
 .details-card h3 {
-  margin: 0 0 6px;
+  margin: 0 0 10px;
   font-size: 14px;
 }
 
@@ -313,7 +313,7 @@ button:disabled {
   grid-template-columns: 1fr auto auto;
   gap: 8px;
   align-items: baseline;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .details-label {
@@ -325,11 +325,11 @@ button:disabled {
 
 .details-meta {
   color: #667085;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .details-amount {
-  font-size: 12px;
+  font-size: 13px;
   color: #101828;
   white-space: nowrap;
 }
@@ -343,10 +343,26 @@ button:disabled {
   padding: 0;
 }
 
-.month-title {
+.month-inline-picker {
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+.month-inline-picker select {
+  min-width: 220px;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: transparent;
+  color: #1d2939;
   text-align: center;
-  font-size: 24px;
-  text-transform: capitalize;
+  text-align-last: center;
 }
 
 .nav-arrow {
@@ -422,5 +438,15 @@ button:disabled {
   .income-hbar-row {
     grid-template-columns: 1fr;
     gap: 6px;
+  }
+
+  .month-inline-picker {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .month-inline-picker select {
+    min-width: 0;
+    width: 100%;
   }
 }

@@ -28,18 +28,31 @@ export const MonthNavigation = ({ availableMonths, selectedMonth, onSelectMonth 
     onSelectMonth(availableMonths[selectedMonthIndex + 1]);
   };
 
-  const monthTitle = selectedMonth
-    ? new Intl.DateTimeFormat('ru-RU', { month: 'long', year: 'numeric' })
-        .format(new Date(`${selectedMonth}-01`))
-        .replace(/\sг\.$/, '')
-    : 'Месяц не выбран';
+  const handleMonthChange = (month: string) => onSelectMonth(month as MonthId);
+  const formatMonthOption = (month: MonthId) => {
+    const formatted = new Intl.DateTimeFormat('ru-RU', { month: 'long', year: 'numeric' })
+      .format(new Date(`${month}-01`))
+      .replace(/\sг\.$/, '');
+
+    return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+  };
 
   return (
     <nav className="month-nav" aria-label="Навигация по месяцам">
       <button type="button" onClick={goPrevMonth} disabled={!canGoPrev} className="nav-arrow" aria-label="Предыдущий месяц">
         ‹
       </button>
-      <strong className="month-title">{monthTitle}</strong>
+
+      <div className="month-inline-picker">
+        <select value={selectedMonth ?? ''} onChange={(event) => handleMonthChange(event.target.value)} disabled={availableMonths.length === 0}>
+          {availableMonths.map((month) => (
+            <option key={month} value={month}>
+              {formatMonthOption(month)}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <button type="button" onClick={goNextMonth} disabled={!canGoNext} className="nav-arrow" aria-label="Следующий месяц">
         ›
       </button>
