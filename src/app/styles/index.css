@@ -88,6 +88,24 @@ button:disabled {
   margin-top: 12px;
 }
 
+.charts-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.charts-right-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.income-section {
+  margin-top: 20px;
+}
+
 .expense-subchart {
   display: grid;
   gap: 10px;
@@ -99,20 +117,26 @@ button:disabled {
 }
 
 .hbars-grid {
+  margin-top: 14px;
   display: grid;
   gap: 10px;
 }
 
 .hbar-row {
   display: grid;
-  grid-template-columns: minmax(120px, 220px) 1fr auto;
-  gap: 10px;
+  grid-template-columns: minmax(150px, 280px) minmax(150px, 1fr) 78px;
+  column-gap: 0;
+  row-gap: 4px;
   align-items: center;
+  min-height: 18px;
 }
 
 .hbar-label {
   font-size: 13px;
   color: #344054;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .hbar-track {
@@ -133,6 +157,52 @@ button:disabled {
   font-size: 12px;
   color: #344054;
   white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.income-hbars-grid {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.income-hbar-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 280px) minmax(150px, 1fr) 78px;
+  column-gap: 0;
+  row-gap: 4px;
+  align-items: center;
+  min-height: 18px;
+}
+
+.income-hbar-label {
+  font-size: 13px;
+  color: #344054;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.income-hbar-track {
+  width: 100%;
+  height: 12px;
+  background: #eaecf0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.income-hbar {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.income-hbar-value {
+  font-size: 12px;
+  color: #344054;
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .month-nav {
@@ -203,7 +273,16 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 
+  .charts-layout {
+    grid-template-columns: 1fr;
+  }
+
   .hbar-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .income-hbar-row {
     grid-template-columns: 1fr;
     gap: 6px;
   }

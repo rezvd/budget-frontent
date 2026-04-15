@@ -1,99 +1,67 @@
 import { useMemo } from 'react';
 
-const STORAGE_KEY = 'budget-category-colors-v1';
-
-const PALETTE = [
-  '#667085',
-  '#475467',
-  '#1570ef',
-  '#0e9384',
-  '#16a34a',
-  '#65a30d',
-  '#ca8a04',
-  '#ea580c',
-  '#dc2626',
-  '#be123c',
-  '#c026d3',
-  '#7c3aed',
-  '#4338ca',
-  '#0369a1',
-  '#0891b2',
-  '#0f766e',
-  '#15803d',
-  '#4d7c0f',
-  '#a16207',
-  '#92400e',
-];
-
 type ColorMap = Record<string, string>;
 
-const hashString = (value: string) => {
-  let hash = 0;
+const DEFAULT_COLOR = '#667085';
 
-  for (let i = 0; i < value.length; i += 1) {
-    hash = (hash << 5) - hash + value.charCodeAt(i);
-    hash |= 0;
-  }
-
-  return Math.abs(hash);
+const CATEGORY_COLORS: Record<string, string> = {
+  '. общий быт': '#64748b',
+  '.одолжения': '#475467',
+  '📠 жкх': '#0ea5e9',
+  '👗 одежда': '#a855f7',
+  '🎁 подарки': '#ef4444',
+  '🛒 продукты': '#3b82f6',
+  '🎓 образование': '#f59e0b',
+  '📡 сервисы и комиссии': '#6366f1',
+  '🏠 для дома': '#f97316',
+  '🩺 здоровье': '#14b8a6',
+  '💅 красота': '#ec4899',
+  '🧪 бытовая химия': '#22c55e',
+  'стипендия': '#0ea5e9',
+  '💰 зп': '#16a34a',
+  '💰 прочие пополнения': '#65a30d',
+  '🔌 техника': '#7c3aed',
+  '🐈 питомцы': '#10b981',
+  '🍸 алкоголь': '#b45309',
+  '💲аренда': '#0f766e',
+  '✈️ путешествия': '#dc2626',
+  '💜 софа': '#c026d3',
 };
 
-const loadStoredMap = (): ColorMap => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-
-    if (!raw) {
-      return {};
-    }
-
-    const parsed = JSON.parse(raw) as ColorMap;
-
-    return parsed && typeof parsed === 'object' ? parsed : {};
-  } catch {
-    return {};
-  }
+const GROUP_COLORS = {
+  foodOut: '#f97316',
+  transport: '#06b6d4',
+  entertainment: '#8b5cf6',
 };
 
-const saveMap = (map: ColorMap) => {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
-  } catch {
-    // no-op: storage can be unavailable in private mode
-  }
-};
+const normalizeCategory = (value: string) => value.toLowerCase().replace(/\s+/g, ' ').trim();
 
-const assignColor = (category: string, usedColors: Set<string>) => {
-  const startIndex = hashString(category) % PALETTE.length;
+const getStaticColor = (rawCategory: string): string => {
+  const category = normalizeCategory(rawCategory);
 
-  for (let i = 0; i < PALETTE.length; i += 1) {
-    const color = PALETTE[(startIndex + i) % PALETTE.length];
-
-    if (!usedColors.has(color)) {
-      return color;
-    }
+  if (category.includes('еда вне дома')) {
+    return GROUP_COLORS.foodOut;
   }
 
-  return PALETTE[startIndex];
+  if (category.includes('проезд')) {
+    return GROUP_COLORS.transport;
+  }
+
+  if (category.includes('развлечения')) {
+    return GROUP_COLORS.entertainment;
+  }
+
+  return CATEGORY_COLORS[category] ?? DEFAULT_COLOR;
 };
 
 export const useCategoryColors = (categories: string[]) => {
   return useMemo(() => {
-    const stored = loadStoredMap();
-    const usedColors = new Set(Object.values(stored));
-    const next = { ...stored };
+    const map: ColorMap = {};
 
     categories.forEach((category) => {
-      if (next[category]) {
-        return;
-      }
-
-      const color = assignColor(category, usedColors);
-      next[category] = color;
-      usedColors.add(color);
+      map[category] = getStaticColor(category);
     });
 
-    saveMap(next);
-
-    return next;
+    return map;
   }, [categories]);
 };

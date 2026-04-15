@@ -5,6 +5,7 @@ import { useCategoryColors } from '../model/use-category-colors';
 type ExpenseChartsProps = {
   regular: CategoryBarItem[];
   nonRegular: CategoryBarItem[];
+  income: CategoryBarItem[];
   excludedLoans: Transaction[];
 };
 
@@ -38,18 +39,23 @@ const Bars = ({ title, items, colors }: { title: string; items: CategoryBarItem[
   );
 };
 
-export const ExpenseCharts = ({ regular, nonRegular, excludedLoans }: ExpenseChartsProps) => {
+export const ExpenseCharts = ({ regular, nonRegular, income, excludedLoans }: ExpenseChartsProps) => {
   const categoryColors = useCategoryColors(
-    [...regular.map((item) => item.category), ...nonRegular.map((item) => item.category)].sort(),
+    [...regular.map((item) => item.category), ...nonRegular.map((item) => item.category), ...income.map((item) => item.category)].sort(),
   );
 
   return (
     <>
       <section className="panel">
-        <h2>Расходы по категориям</h2>
-        <div className="charts-2col">
+        <h2>Расходы и доходы</h2>
+        <div className="charts-layout">
           <Bars title="Повседневные расходы" items={regular} colors={categoryColors} />
-          <Bars title="Крупные расходы" items={nonRegular} colors={categoryColors} />
+          <div className="charts-right-col">
+            <Bars title="Крупные расходы" items={nonRegular} colors={categoryColors} />
+            <div className="income-section">
+              <Bars title="Доходы" items={income} colors={categoryColors} />
+            </div>
+          </div>
         </div>
       </section>
 

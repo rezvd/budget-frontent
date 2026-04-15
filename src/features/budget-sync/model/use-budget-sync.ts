@@ -6,6 +6,7 @@ import {
   ingestBudgetDataFromGoogleSheets,
 } from '@/entities/budget-data/api/ingest-budget-data';
 import { buildExpenseChartsData } from '@/entities/budget-data/model/expense-charts';
+import { buildIncomeCategoryBars } from '@/entities/budget-data/model/income-chart';
 import { MonthId, MonthSummary, Transaction } from '@/entities/budget-data/model/models';
 
 const getLatestMonth = (months: MonthId[]) => {
@@ -64,6 +65,7 @@ export const useBudgetSync = () => {
   }, [selectedMonth, transactions]);
 
   const expenseCharts = useMemo(() => buildExpenseChartsData(selectedMonthTransactions), [selectedMonthTransactions]);
+  const incomeCategoryBars = useMemo(() => buildIncomeCategoryBars(selectedMonthTransactions), [selectedMonthTransactions]);
 
   const syncFromSheet = async () => {
     if (!import.meta.env.VITE_GOOGLE_SHEET_ID || !import.meta.env.VITE_GOOGLE_SHEETS_API_KEY) {
@@ -102,6 +104,7 @@ export const useBudgetSync = () => {
     message,
     monthSummary,
     expenseCharts,
+    incomeCategoryBars,
     syncFromSheet,
   };
 };

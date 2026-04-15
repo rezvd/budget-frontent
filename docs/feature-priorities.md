@@ -9,7 +9,7 @@ Legend: `⬜ not started` `🟨 in progress` `✅ done`
 3. ✅ F03: Month summary  
    Show income, expenses, net.
 4. ✅ F04: Expense bar charts (regular vs non-regular)  
-5. ⬜ F05: Income category bar chart  
+5. ✅ F05: Income category bar chart  
    Show income categories sorted by amount.
 6. ⬜ F10: Detailed category tooltip (after income chart)  
    Show category spend breakdown on hover, sorted descending.
