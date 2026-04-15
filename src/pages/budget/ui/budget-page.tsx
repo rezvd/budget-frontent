@@ -22,6 +22,7 @@ export const BudgetPage = ({ availableMonths, selectedMonth, summary, expenseCha
         regular={expenseCharts.regular}
         nonRegular={expenseCharts.nonRegular}
         income={incomeCategoryBars}
+        breakdownByCategory={expenseCharts.breakdownByCategory}
         excludedLoans={expenseCharts.excludedLoans}
       />
     </main>

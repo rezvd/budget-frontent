@@ -11,7 +11,7 @@ Legend: `⬜ not started` `🟨 in progress` `✅ done`
 4. ✅ F04: Expense bar charts (regular vs non-regular)  
 5. ✅ F05: Income category bar chart  
    Show income categories sorted by amount.
-6. ⬜ F10: Detailed category tooltip (after income chart)  
+6. ✅ F10: Detailed category tooltip (after income chart)  
    Show category spend breakdown on hover, sorted descending.
 7. ⬜ F06: Budget vs actual table  
    Compare monthly plan and factual spending by category.

@@ -1,9 +1,16 @@
 import { CategoryBarItem, ExpenseRegularity, Transaction } from './models';
 
+export type ExpenseBreakdownItem = {
+  label: string;
+  amount: number;
+  percentOfCategoryTotal: number;
+};
+
 export type ExpenseChartsData = {
   regular: CategoryBarItem[];
   nonRegular: CategoryBarItem[];
   excludedLoans: Transaction[];
+  breakdownByCategory: Record<string, ExpenseBreakdownItem[]>;
 };
 
 const LOANS_CATEGORY = '.одолжения';
@@ -29,6 +36,40 @@ const toCategoryBars = (transactions: Transaction[]): CategoryBarItem[] => {
     .sort((a, b) => b.amount - a.amount);
 };
 
+const normalizeBreakdownLabel = (transaction: Transaction) => {
+  const value = transaction.comment || transaction.shop || transaction.additionalComment || '';
+  const normalized = value.replace(/\s+/g, ' ').trim();
+
+  return normalized || 'Прочее';
+};
+
+const buildBreakdownByCategory = (transactions: Transaction[]) => {
+  const byCategory = new Map<string, Map<string, number>>();
+
+  transactions.forEach((item) => {
+    const categoryMap = byCategory.get(item.category) ?? new Map<string, number>();
+    const label = normalizeBreakdownLabel(item);
+    const current = categoryMap.get(label) ?? 0;
+    categoryMap.set(label, current + item.amountAbs);
+    byCategory.set(item.category, categoryMap);
+  });
+
+  const out: Record<string, ExpenseBreakdownItem[]> = {};
+
+  byCategory.forEach((labelMap, category) => {
+    const total = [...labelMap.values()].reduce((sum, value) => sum + value, 0);
+    out[category] = [...labelMap.entries()]
+      .map(([label, amount]) => ({
+        label,
+        amount,
+        percentOfCategoryTotal: total > 0 ? (amount / total) * 100 : 0,
+      }))
+      .sort((a, b) => b.amount - a.amount);
+  });
+
+  return out;
+};
+
 export const buildExpenseChartsData = (transactions: Transaction[]): ExpenseChartsData => {
   const expenses = transactions.filter((item) => item.type === 'expense');
   const excludedLoans = expenses.filter((item) => isLoansCategory(item.category)).sort((a, b) => b.amountAbs - a.amountAbs);
@@ -41,5 +82,6 @@ export const buildExpenseChartsData = (transactions: Transaction[]): ExpenseChar
     regular: toCategoryBars(regular),
     nonRegular: toCategoryBars(nonRegular),
     excludedLoans,
+    breakdownByCategory: buildBreakdownByCategory(transactions),
   };
 };
