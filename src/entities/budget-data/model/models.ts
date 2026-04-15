@@ -52,3 +52,11 @@ export interface CategoryBarItem {
   amount: number;
   percentOfMonthTotal: number;
 }
+
+export interface BudgetVsActualRow {
+  category: string;
+  planned: number;
+  actual: number;
+  delta: number;
+  status: 'within_budget' | 'near_limit' | 'over_budget' | 'no_plan';
+}

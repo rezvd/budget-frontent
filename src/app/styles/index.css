@@ -334,6 +334,43 @@ button:disabled {
   white-space: nowrap;
 }
 
+.budget-table-wrap {
+  margin-top: 12px;
+  overflow-x: auto;
+}
+
+.budget-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 680px;
+}
+
+.budget-table th,
+.budget-table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid #eaecf0;
+  font-size: 13px;
+}
+
+.budget-table th {
+  color: #475467;
+  font-weight: 600;
+}
+
+.delta-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delta-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
 .month-nav {
   width: 100%;
   display: grid;

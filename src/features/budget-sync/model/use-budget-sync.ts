@@ -6,8 +6,9 @@ import {
   ingestBudgetDataFromGoogleSheets,
 } from '@/entities/budget-data/api/ingest-budget-data';
 import { buildExpenseChartsData } from '@/entities/budget-data/model/expense-charts';
+import { buildBudgetVsActualRows } from '@/entities/budget-data/model/budget-vs-actual';
 import { buildIncomeCategoryBars } from '@/entities/budget-data/model/income-chart';
-import { MonthId, MonthSummary, Transaction } from '@/entities/budget-data/model/models';
+import { MonthId, MonthSummary, MonthlyBudgetPlan, Transaction } from '@/entities/budget-data/model/models';
 
 const getLatestMonth = (months: MonthId[]) => {
   if (months.length === 0) {
@@ -29,6 +30,7 @@ const getAvailableMonths = (data: BudgetDataIngestionResult): MonthId[] => {
 
 export const useBudgetSync = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [monthlyPlans, setMonthlyPlans] = useState<MonthlyBudgetPlan[]>([]);
   const [availableMonths, setAvailableMonths] = useState<MonthId[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<MonthId | null>(null);
   const [warnings, setWarnings] = useState<DataIngestionWarning[]>([]);
@@ -66,6 +68,10 @@ export const useBudgetSync = () => {
 
   const expenseCharts = useMemo(() => buildExpenseChartsData(selectedMonthTransactions), [selectedMonthTransactions]);
   const incomeCategoryBars = useMemo(() => buildIncomeCategoryBars(selectedMonthTransactions), [selectedMonthTransactions]);
+  const budgetVsActualRows = useMemo(
+    () => buildBudgetVsActualRows(selectedMonth, monthlyPlans, transactions),
+    [selectedMonth, monthlyPlans, transactions],
+  );
 
   const syncFromSheet = async () => {
     if (!import.meta.env.VITE_GOOGLE_SHEET_ID || !import.meta.env.VITE_GOOGLE_SHEETS_API_KEY) {
@@ -82,6 +88,7 @@ export const useBudgetSync = () => {
       const latestMonth = getLatestMonth(months);
 
       setTransactions(data.transactions);
+      setMonthlyPlans(data.monthlyPlans);
       setAvailableMonths(months);
       setSelectedMonth(latestMonth);
       setWarnings(data.warnings);
@@ -105,6 +112,7 @@ export const useBudgetSync = () => {
     monthSummary,
     expenseCharts,
     incomeCategoryBars,
+    budgetVsActualRows,
     syncFromSheet,
   };
 };

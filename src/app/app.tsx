@@ -20,6 +20,7 @@ export const App = () => {
     monthSummary,
     expenseCharts,
     incomeCategoryBars,
+    budgetVsActualRows,
     syncFromSheet,
   } = useBudgetSync();
 
@@ -46,6 +47,7 @@ export const App = () => {
           summary={monthSummary}
           expenseCharts={expenseCharts}
           incomeCategoryBars={incomeCategoryBars}
+          budgetVsActualRows={budgetVsActualRows}
           onSelectMonth={setSelectedMonth}
         />
       ) : (

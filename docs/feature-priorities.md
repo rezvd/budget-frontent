@@ -13,7 +13,7 @@ Legend: `⬜ not started` `🟨 in progress` `✅ done`
    Show income categories sorted by amount.
 6. ✅ F10: Detailed category tooltip (after income chart)  
    Show category spend breakdown on hover, sorted descending.
-7. ⬜ F06: Budget vs actual table  
+7. ✅ F06: Budget vs actual table  
    Compare monthly plan and factual spending by category.
 8. ⬜ F07: Monthly comment in Markdown  
    Render monthly comment as Markdown (read-only).
