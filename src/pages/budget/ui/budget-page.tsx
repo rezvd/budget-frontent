@@ -1,14 +1,12 @@
-import { BudgetVsActualRow, CategoryBarItem, MonthId, MonthSummary } from '@/entities/budget-data/model/models';
+import { BudgetVsActualRow, CategoryBarItem, MonthId } from '@/entities/budget-data/model/models';
 import { ExpenseChartsData } from '@/entities/budget-data/model/expense-charts';
 import { MonthNavigation } from '@/widgets/month-navigation/ui/month-navigation';
 import { BudgetVsActualTable } from '@/widgets/budget-vs-actual-table/ui/budget-vs-actual-table';
 import { ExpenseCharts } from '@/widgets/expense-charts/ui/expense-charts';
-import { MonthSummaryWidget } from '@/widgets/month-summary/ui/month-summary';
 
 type BudgetPageProps = {
   availableMonths: MonthId[];
   selectedMonth: MonthId | null;
-  summary: MonthSummary | null;
   expenseCharts: ExpenseChartsData;
   incomeCategoryBars: CategoryBarItem[];
   budgetVsActualRows: BudgetVsActualRow[];
@@ -18,7 +16,6 @@ type BudgetPageProps = {
 export const BudgetPage = ({
   availableMonths,
   selectedMonth,
-  summary,
   expenseCharts,
   incomeCategoryBars,
   budgetVsActualRows,
@@ -27,7 +24,6 @@ export const BudgetPage = ({
   return (
     <main className="page-content">
       <MonthNavigation availableMonths={availableMonths} selectedMonth={selectedMonth} onSelectMonth={onSelectMonth} />
-      <MonthSummaryWidget summary={summary} />
       <ExpenseCharts
         regular={expenseCharts.regular}
         nonRegular={expenseCharts.nonRegular}

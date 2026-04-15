@@ -8,7 +8,7 @@ import {
 import { buildExpenseChartsData } from '@/entities/budget-data/model/expense-charts';
 import { buildBudgetVsActualRows } from '@/entities/budget-data/model/budget-vs-actual';
 import { buildIncomeCategoryBars } from '@/entities/budget-data/model/income-chart';
-import { MonthId, MonthSummary, MonthlyBudgetPlan, Transaction } from '@/entities/budget-data/model/models';
+import { MonthId, MonthlyBudgetPlan, Transaction } from '@/entities/budget-data/model/models';
 
 const getLatestMonth = (months: MonthId[]) => {
   if (months.length === 0) {
@@ -36,27 +36,6 @@ export const useBudgetSync = () => {
   const [warnings, setWarnings] = useState<DataIngestionWarning[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
-
-  const monthSummary = useMemo<MonthSummary | null>(() => {
-    if (!selectedMonth) {
-      return null;
-    }
-
-    const selectedTransactions = transactions.filter((item) => item.month === selectedMonth);
-    const totalIncome = selectedTransactions
-      .filter((item) => item.type === 'income')
-      .reduce((sum, item) => sum + item.amountAbs, 0);
-    const totalExpense = selectedTransactions
-      .filter((item) => item.type === 'expense')
-      .reduce((sum, item) => sum + item.amountAbs, 0);
-
-    return {
-      month: selectedMonth,
-      totalIncome,
-      totalExpense,
-      net: totalIncome - totalExpense,
-    };
-  }, [selectedMonth, transactions]);
 
   const selectedMonthTransactions = useMemo(() => {
     if (!selectedMonth) {
@@ -109,7 +88,6 @@ export const useBudgetSync = () => {
     warnings,
     isLoading,
     message,
-    monthSummary,
     expenseCharts,
     incomeCategoryBars,
     budgetVsActualRows,

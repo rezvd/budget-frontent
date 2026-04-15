@@ -17,7 +17,6 @@ export const App = () => {
     warnings,
     isLoading,
     message,
-    monthSummary,
     expenseCharts,
     incomeCategoryBars,
     budgetVsActualRows,
@@ -44,7 +43,6 @@ export const App = () => {
         <BudgetPage
           availableMonths={availableMonths}
           selectedMonth={selectedMonth}
-          summary={monthSummary}
           expenseCharts={expenseCharts}
           incomeCategoryBars={incomeCategoryBars}
           budgetVsActualRows={budgetVsActualRows}

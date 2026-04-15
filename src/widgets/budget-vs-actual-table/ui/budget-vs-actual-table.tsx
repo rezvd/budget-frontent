@@ -16,11 +16,25 @@ export const BudgetVsActualTable = ({ rows }: BudgetVsActualTableProps) => {
     }
 
     const ratio = row.actual / row.planned;
-    const clamped = Math.max(0, Math.min(1.5, ratio));
-    const normalized = clamped / 1.5;
-    const hue = 120 - normalized * 120;
-
-    return `hsl(${hue} 75% 45%)`;
+    if (ratio <= 0.7) {
+      return '#15803d';
+    }
+    if (ratio <= 0.9) {
+      return '#22c55e';
+    }
+    if (ratio <= 1.0) {
+      return '#84cc16';
+    }
+    if (ratio <= 1.1) {
+      return '#facc15';
+    }
+    if (ratio <= 1.2) {
+      return '#fb923c';
+    }
+    if (ratio <= 1.35) {
+      return '#f97316';
+    }
+    return '#dc2626';
   };
 
   const plannedRows = useMemo(() => rows.filter((row) => row.status !== 'no_plan'), [rows]);

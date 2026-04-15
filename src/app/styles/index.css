@@ -162,9 +162,23 @@ button:disabled {
   gap: 10px;
 }
 
+.expense-subchart-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .expense-subchart h3 {
   margin: 0;
   font-size: 16px;
+}
+
+.expense-subchart-total {
+  font-size: 14px;
+  color: #344054;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .hbars-grid {

@@ -27,10 +27,14 @@ const Bars = ({
   onToggleCategory: (category: string) => void;
 }) => {
   const max = items[0]?.amount ?? 0;
+  const total = items.reduce((sum, item) => sum + item.amount, 0);
 
   return (
     <section className="expense-subchart">
-      <h3>{title}</h3>
+      <div className="expense-subchart-header">
+        <h3>{title}</h3>
+        <b className="expense-subchart-total">{formatCurrency(total)}</b>
+      </div>
       {items.length === 0 ? (
         <p className="empty">Нет данных за выбранный месяц.</p>
       ) : (
