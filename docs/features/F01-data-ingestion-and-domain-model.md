@@ -6,8 +6,11 @@ Load dashboard data from Google Sheets and transform it to stable frontend model
 ## Scope
 - Parse rows from `logs`, `month_plans`, `month_comments`.
 - Ignore technical/summary rows (for example `month = 0`, empty rows, subtotal lines).
+- Skip `logs` rows where month or amount is empty.
 - Normalize category and date fields.
 - Infer transaction type from signed amount.
+- Preserve multiline markdown in `month_comments.comment`.
+- Treat literal `FALSE/false` in optional text fields as empty value.
 
 ## Input Mapping (from `docs/data_example.xlsx`)
 - `logs` columns: `month`, `day`, `amount`, `shop`, `category`, `comment`, `additional_comment`, `is_regular_type`.
@@ -22,3 +25,4 @@ Load dashboard data from Google Sheets and transform it to stable frontend model
 - All valid rows map to typed domain entities.
 - Invalid rows are skipped with non-blocking warnings.
 - Parsing result is deterministic for the same sheet snapshot.
+- `amount = 0` rows are imported and shown in UI, but do not create ingestion warnings by themselves.

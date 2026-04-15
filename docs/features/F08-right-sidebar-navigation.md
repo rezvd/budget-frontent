@@ -1,17 +1,21 @@
-# F08: Right Sidebar Navigation
+# F08: Top Navigation (Dashboard / Logs / Sync)
 
 ## Goal
-Add a right sidebar for switching between app pages.
+Provide page switching between key application sections.
 
-## Pages in Sidebar
+## Pages in Navigation
 - Dashboard
 - Logs
+- Sync
 
 ## Requirements
-- Sidebar is visible on desktop.
+- Use top horizontal navigation (tabs-like), not sidebar.
 - Active page is highlighted.
 - Navigation preserves current month context when possible.
+- Order of items: `Дашборд`, `Логи`, `Синхронизация`.
+- First data sync starts automatically on app load.
+- `Синхронизация` page keeps manual re-sync action, available months counter, loaded logs summary, and parsing warnings list.
 
 ## Acceptance Criteria
-- User can switch pages from the sidebar in one click.
+- User can switch pages in one click.
 - Active state is always accurate.
