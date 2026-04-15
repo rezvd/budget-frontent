@@ -10,6 +10,19 @@ import { buildBudgetVsActualRows } from '@/entities/budget-data/model/budget-vs-
 import { buildIncomeCategoryBars } from '@/entities/budget-data/model/income-chart';
 import { MonthId, MonthlyBudgetPlan, MonthlyComment, Transaction } from '@/entities/budget-data/model/models';
 
+type UseBudgetSyncOptions = {
+  skipSofa?: boolean;
+};
+
+const normalizeCategoryForMatch = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const isSofaCategory = (category: string) => normalizeCategoryForMatch(category) === 'софа';
+
 const getLatestMonth = (months: MonthId[]) => {
   if (months.length === 0) {
     return null;
@@ -28,7 +41,7 @@ const getAvailableMonths = (data: BudgetDataIngestionResult): MonthId[] => {
   return [...set].sort();
 };
 
-export const useBudgetSync = () => {
+export const useBudgetSync = ({ skipSofa = false }: UseBudgetSyncOptions = {}) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [monthlyPlans, setMonthlyPlans] = useState<MonthlyBudgetPlan[]>([]);
   const [monthlyComments, setMonthlyComments] = useState<MonthlyComment[]>([]);
@@ -38,24 +51,33 @@ export const useBudgetSync = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
 
+  const visibleTransactions = useMemo(
+    () => (skipSofa ? transactions.filter((item) => !isSofaCategory(item.category)) : transactions),
+    [skipSofa, transactions],
+  );
+  const visibleMonthlyPlans = useMemo(
+    () => (skipSofa ? monthlyPlans.filter((item) => !isSofaCategory(item.category)) : monthlyPlans),
+    [skipSofa, monthlyPlans],
+  );
+
   const selectedMonthTransactions = useMemo(() => {
     if (!selectedMonth) {
       return [];
     }
 
-    return transactions.filter((item) => item.month === selectedMonth);
-  }, [selectedMonth, transactions]);
+    return visibleTransactions.filter((item) => item.month === selectedMonth);
+  }, [selectedMonth, visibleTransactions]);
 
   const allLogs = useMemo(
     () =>
-      [...transactions].sort((a, b) => {
+      [...visibleTransactions].sort((a, b) => {
         if (a.date !== b.date) {
           return b.date.localeCompare(a.date);
         }
 
         return b.id.localeCompare(a.id);
       }),
-    [transactions],
+    [visibleTransactions],
   );
 
   const selectedMonthComment = useMemo(() => {
@@ -69,8 +91,8 @@ export const useBudgetSync = () => {
   const expenseCharts = useMemo(() => buildExpenseChartsData(selectedMonthTransactions), [selectedMonthTransactions]);
   const incomeCategoryBars = useMemo(() => buildIncomeCategoryBars(selectedMonthTransactions), [selectedMonthTransactions]);
   const budgetVsActualRows = useMemo(
-    () => buildBudgetVsActualRows(selectedMonth, monthlyPlans, transactions),
-    [selectedMonth, monthlyPlans, transactions],
+    () => buildBudgetVsActualRows(selectedMonth, visibleMonthlyPlans, visibleTransactions),
+    [selectedMonth, visibleMonthlyPlans, visibleTransactions],
   );
 
   const syncFromSheet = async () => {

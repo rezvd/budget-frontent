@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useBudgetSync } from '@/features/budget-sync/model/use-budget-sync';
 import { BudgetPage } from '@/pages/budget/ui/budget-page';
@@ -11,6 +11,7 @@ type AppPage = 'dashboard' | 'logs' | 'sync';
 export const App = () => {
   const [activePage, setActivePage] = useState<AppPage>('dashboard');
   const hasAutoSyncedRef = useRef(false);
+  const skipSofa = useMemo(() => new URLSearchParams(window.location.search).get('skip')?.toLowerCase() === 'true', []);
   const {
     availableMonths,
     selectedMonth,
@@ -24,7 +25,7 @@ export const App = () => {
     budgetVsActualRows,
     allLogs,
     syncFromSheet,
-  } = useBudgetSync();
+  } = useBudgetSync({ skipSofa });
 
   useEffect(() => {
     if (hasAutoSyncedRef.current) {
