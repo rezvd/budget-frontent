@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import { CategoryBarItem, Transaction } from '@/entities/budget-data/model/models';
+import { CategoryBarItem } from '@/entities/budget-data/model/models';
 import { ExpenseBreakdownItem } from '@/entities/budget-data/model/expense-charts';
 import { formatCurrency } from '@/shared/lib/format/format-currency';
 import { useCategoryColors } from '../model/use-category-colors';
@@ -9,7 +9,6 @@ type ExpenseChartsProps = {
   regular: CategoryBarItem[];
   nonRegular: CategoryBarItem[];
   income: CategoryBarItem[];
-  excludedLoans: Transaction[];
   breakdownByCategory: Record<string, ExpenseBreakdownItem[]>;
 };
 
@@ -65,7 +64,7 @@ const Bars = ({
   );
 };
 
-export const ExpenseCharts = ({ regular, nonRegular, income, excludedLoans, breakdownByCategory }: ExpenseChartsProps) => {
+export const ExpenseCharts = ({ regular, nonRegular, income, breakdownByCategory }: ExpenseChartsProps) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const categoryColors = useCategoryColors(
     [...regular.map((item) => item.category), ...nonRegular.map((item) => item.category), ...income.map((item) => item.category)].sort(),
@@ -153,22 +152,6 @@ export const ExpenseCharts = ({ regular, nonRegular, income, excludedLoans, brea
         )}
       </div>
 
-      {excludedLoans.length > 0 && (
-        <section className="panel">
-          <h2>Исключённые .одолжения</h2>
-          <ul className="list">
-            {excludedLoans.map((item) => (
-              <li key={item.id} className="row">
-                <div>
-                  <strong>{item.category}</strong>
-                  <p>{new Date(item.date).toLocaleDateString('ru-RU')}</p>
-                </div>
-                <b>{formatCurrency(item.amountAbs)}</b>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
     </>
   );
 };

@@ -32,7 +32,6 @@ export const BudgetPage = ({
         nonRegular={expenseCharts.nonRegular}
         income={incomeCategoryBars}
         breakdownByCategory={expenseCharts.breakdownByCategory}
-        excludedLoans={expenseCharts.excludedLoans}
       />
       <div className="budget-comment-layout">
         <BudgetVsActualTable rows={budgetVsActualRows} />

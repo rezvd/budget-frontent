@@ -1,8 +1,10 @@
 import { BudgetVsActualRow, MonthId, MonthlyBudgetPlan, Transaction } from './models';
 
 const NEAR_LIMIT_RATIO = 0.9;
+const LOANS_CATEGORY = '.одолжения';
 
 const normalizeCategory = (value: string) => value.toLowerCase().replace(/\s+/g, ' ').trim();
+const isLoansCategory = (value: string) => normalizeCategory(value) === LOANS_CATEGORY;
 
 export const buildBudgetVsActualRows = (
   selectedMonth: MonthId | null,
@@ -16,6 +18,7 @@ export const buildBudgetVsActualRows = (
   const plansByCategory = new Map<string, { category: string; planned: number }>();
   monthlyPlans
     .filter((item) => item.month === selectedMonth)
+    .filter((item) => !isLoansCategory(item.category))
     .forEach((item) => {
       const key = normalizeCategory(item.category);
       const prev = plansByCategory.get(key);
@@ -28,6 +31,7 @@ export const buildBudgetVsActualRows = (
   const actualByCategory = new Map<string, { category: string; actual: number }>();
   transactions
     .filter((item) => item.month === selectedMonth && item.type === 'expense')
+    .filter((item) => !isLoansCategory(item.category))
     .forEach((item) => {
       const key = normalizeCategory(item.category);
       const prev = actualByCategory.get(key);

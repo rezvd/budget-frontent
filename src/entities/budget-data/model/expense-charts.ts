@@ -9,7 +9,6 @@ export type ExpenseBreakdownItem = {
 export type ExpenseChartsData = {
   regular: CategoryBarItem[];
   nonRegular: CategoryBarItem[];
-  excludedLoans: Transaction[];
   breakdownByCategory: Record<string, ExpenseBreakdownItem[]>;
 };
 
@@ -96,8 +95,6 @@ const buildBreakdownByCategory = (transactions: Transaction[]) => {
 
 export const buildExpenseChartsData = (transactions: Transaction[]): ExpenseChartsData => {
   const expenses = transactions.filter((item) => item.type === 'expense');
-  const excludedLoans = expenses.filter((item) => isLoansCategory(item.category)).sort((a, b) => b.amountAbs - a.amountAbs);
-
   const withoutLoans = expenses.filter((item) => !isLoansCategory(item.category));
   const regular = withoutLoans.filter((item) => item.isRegularType === ExpenseRegularity.REGULAR);
   const nonRegular = withoutLoans.filter((item) => item.isRegularType !== ExpenseRegularity.REGULAR);
@@ -105,7 +102,6 @@ export const buildExpenseChartsData = (transactions: Transaction[]): ExpenseChar
   return {
     regular: toCategoryBars(regular),
     nonRegular: toCategoryBars(nonRegular),
-    excludedLoans,
-    breakdownByCategory: buildBreakdownByCategory(transactions),
+    breakdownByCategory: buildBreakdownByCategory(transactions.filter((item) => !isLoansCategory(item.category))),
   };
 };
