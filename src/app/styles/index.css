@@ -72,6 +72,28 @@ button:disabled {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  border-bottom: 1px solid #eaecf0;
+  padding-bottom: 6px;
+}
+
+.top-menu-link {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #667085;
+  padding: 8px 4px;
+  font-weight: 600;
+  line-height: 1.2;
+  border-bottom: 2px solid transparent;
+}
+
+.top-menu-link:hover {
+  color: #1d2939;
+}
+
+.top-menu-link.is-active {
+  color: #1d2939;
+  border-bottom-color: #1d2939;
 }
 
 .top-menu-sync {
